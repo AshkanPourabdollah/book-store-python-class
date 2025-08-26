@@ -1,4 +1,6 @@
+from classes.book import Book
 import os
+import json
 
 user_list = [
     {
@@ -17,6 +19,38 @@ user_list = [
         "password": "pass2",
     },
 ]
+
+book_list = []
+
+cart_list = []
+####################################################################### Constant Variables #############################
+BOOK_JSON_FILE_PATH = "database_files/books.json"
+USER_JSON_FILE_PATH = "database_files/user.json"
+CART_JSON_FILE_PATH = "database_files/cart.json"
+
+
+####################################################################### Load database ##################################
+# Load books
+def load_books_from_database():
+    with open(BOOK_JSON_FILE_PATH, 'r') as file:
+        # Load json array in data variable
+        data = json.load(file)
+
+        # Creating book object form the class and save in list
+        for book in data:
+            book_list.append(
+                Book(
+                    uid=book.get("uid"),
+                    title=book.get("title"),
+                    author=book.get("author"),
+                    pages=book.get("pages"),
+                    price=book.get("price"),
+                    discount_price=book.get("discount_price"),
+                    category=book.get("category"),
+                    published_date=book.get("published_date"),
+                )
+            )
+
 
 ####################################################################### Functions ######################################
 def clear_screen():
@@ -54,9 +88,35 @@ def user_checker():
         return the_user
 
 
+def waiting_function():
+    print()
+    print()
+    input("Please press 'enter' to continue ...")
+
+
+def main_function_show_all_the_books():
+    # Showing table
+    print("##################################################################################################")
+    print("Book id \t Price \t\t\t Discount \t\t Book title ")
+    print("##################################################################################################")
+
+    # Show each item in book list
+    for item in book_list:
+        # Calculating discount price
+        discount_price = item.getter_discount_price() if item.getter_discount_price() != 0 else "----"
+
+        # Showing each book info
+        print(f"{item.getter_uid()} \t\t {item.getter_price()} $ \t\t {discount_price} $ \t\t {item.getter_title()}")
+
+    # Waiting for user to press enter to continue
+    waiting_function()
+
 ####################################################################### Main Part ######################################
 
 clear_screen()
+
+# Loading files
+load_books_from_database()
 
 print("""Hello dear user!
 Welcome to Computech Book Store !
@@ -94,7 +154,7 @@ while True:
     clear_screen()
 
     if choice == "1":
-        pass
+        main_function_show_all_the_books()
     elif choice == "2":
         pass
     elif choice == "3":
