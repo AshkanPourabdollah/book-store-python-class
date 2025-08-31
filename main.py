@@ -129,14 +129,16 @@ def main_function_show_the_book_details():
             print(f'🗿 Author : {founded_book.getter_author()}')
             print(f'📄 Pages : {founded_book.getter_pages()}')
             print(f'💸 Price : {founded_book.getter_price()}')
-            print(f'🤑 Discount Price : {founded_book.getter_discount_price() if founded_book.getter_discount_price == 0.0 else "---"}')
+            print(f'🤑 Discount Price : {founded_book.getter_discount_price() if founded_book.getter_discount_price() != 0.0 else "---"}')
             print(f'📅 Published date : {founded_book.getter_published_date()}')
 
-            print("""
-            [Book Title] is a compelling work by the talented author [Author Name], published in [Year of Publication]. Presented in a [Cover Type] format, this book spans [Number of Pages] pages filled with rich content that invites readers into a thoughtful and immersive journey through the author's world.
-Priced at [Price] USD, this book reflects the value of its content and the quality of its production. With artistic design, high-end printing, and carefully selected materials, it stands as a distinguished cultural product.
-More than just a literary work, [Book Title] offers a reflective and aesthetic experience—one that encourages deeper understanding, contemplation, and a fresh perspective on the world around us.
-            """)
+            print("\n")
+
+            print(f"{founded_book.getter_title()} is a compelling work by the talented author {founded_book.getter_author()}, published in {founded_book.getter_published_date()}.")
+            print(f"This book spans {founded_book.getter_pages()} pages filled with rich content that invites readers into a thoughtful and immersive journey through the author's world.")
+            print(f"Priced at {founded_book.getter_price() if founded_book.getter_discount_price() == 0 else founded_book.getter_discount_price()} USD, this book reflects the value of its content and the quality of its production.")
+            print(f"With artistic design, high-end printing, and carefully selected materials,"+" it stands as a distinguished cultural product.")
+            print(f"More than just a literary work, {founded_book.getter_title()} offers a reflective and aesthetic experience—one that encourages deeper understanding, contemplation, and a fresh perspective on the world around us.")
 
         # The book not exists in our database
         else:
