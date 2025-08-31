@@ -108,8 +108,47 @@ def main_function_show_all_the_books():
         # Showing each book info
         print(f"{item.getter_uid()} \t\t {item.getter_price()} $ \t\t {discount_price} $ \t\t {item.getter_title()}")
 
-    # Waiting for user to press enter to continue
-    waiting_function()
+
+def main_function_show_the_book_details():
+    print("Show the book details")
+    try:
+        # Getting the book id
+        book_id = int(input("Enter the book id >>> "))
+
+        founded_book = None
+
+        # Searching for the book
+        for the_book in book_list:
+            if the_book.getter_uid() == book_id:
+                founded_book = the_book
+                break
+
+        # Here we founded the book
+        if founded_book is not None:
+            print(f'📚 Book name : {founded_book.getter_title()}')
+            print(f'🗿 Author : {founded_book.getter_author()}')
+            print(f'📄 Pages : {founded_book.getter_pages()}')
+            print(f'💸 Price : {founded_book.getter_price()}')
+            print(f'🤑 Discount Price : {founded_book.getter_discount_price() if founded_book.getter_discount_price == 0.0 else "---"}')
+            print(f'📅 Published date : {founded_book.getter_published_date()}')
+
+            print("""
+            [Book Title] is a compelling work by the talented author [Author Name], published in [Year of Publication]. Presented in a [Cover Type] format, this book spans [Number of Pages] pages filled with rich content that invites readers into a thoughtful and immersive journey through the author's world.
+Priced at [Price] USD, this book reflects the value of its content and the quality of its production. With artistic design, high-end printing, and carefully selected materials, it stands as a distinguished cultural product.
+More than just a literary work, [Book Title] offers a reflective and aesthetic experience—one that encourages deeper understanding, contemplation, and a fresh perspective on the world around us.
+            """)
+
+        # The book not exists in our database
+        else:
+            clear_screen()
+            print("There is no book exists with this id!")
+            print("Please enter a valid book id :)")
+
+    except ValueError:
+        clear_screen()
+        print("Please enter a number\nNot a string !")
+        print("Try again :)")
+
 
 ####################################################################### Main Part ######################################
 
@@ -156,7 +195,7 @@ while True:
     if choice == "1":
         main_function_show_all_the_books()
     elif choice == "2":
-        pass
+        main_function_show_the_book_details()
     elif choice == "3":
         pass
     elif choice == "4":
@@ -178,3 +217,6 @@ while True:
     else:
         print("Invalid option")
         print("Please try again and select one of the options :)")
+
+    # Waiting for user to press enter to continue
+    waiting_function()

@@ -38,11 +38,11 @@ class Book:
         self.__author = new_author
 
     # Pages
-    def getter_price(self):
-        return self.__price
+    def getter_pages(self):
+        return self.__pages
 
-    def setter_price(self, new_price):
-        self.__price = new_price
+    def setter_pages(self, new_pages):
+        self.__pages = new_pages
 
     # Price
     def getter_price(self):
