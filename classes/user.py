@@ -48,7 +48,7 @@ class User:
         return self.__balance
 
     def setter_balance(self, new_balance):
-        self.__balance = new_balance
+        self.__balance += new_balance
 
     ######################
     # Defining our methods

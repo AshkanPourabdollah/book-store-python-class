@@ -1,31 +1,16 @@
 from classes.book import Book
+from classes.user import User
 import os
 import json
 
-user_list = [
-    {
-        "name": "Ashkan",
-        "phone": "09123456701",
-        "password": "ashkan 123",
-    },
-    {
-        "name": "Parsa",
-        "phone": "09123456702",
-        "password": "pass1",
-    },
-    {
-        "name": "AmirHossain",
-        "phone": "09123456703",
-        "password": "pass2",
-    },
-]
+user_list = []
 
 book_list = []
 
 cart_list = []
 ####################################################################### Constant Variables #############################
 BOOK_JSON_FILE_PATH = "database_files/books.json"
-USER_JSON_FILE_PATH = "database_files/user.json"
+USER_JSON_FILE_PATH = "database_files/users.json"
 CART_JSON_FILE_PATH = "database_files/cart.json"
 
 
@@ -52,6 +37,21 @@ def load_books_from_database():
             )
 
 
+def load_users_from_database():
+    with open(USER_JSON_FILE_PATH, 'r') as file:
+        data = json.load(file)
+        for the_user in data:
+            user_list.append(
+                User(
+                    name=the_user.get("name"),
+                    age=the_user.get("age"),
+                    phone=the_user.get("phone"),
+                    password=the_user.get("password"),
+                    balance=the_user.get("balance")
+                )
+            )
+
+
 ####################################################################### Functions ######################################
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -62,7 +62,7 @@ def user_checker():
 
     entry_phone = input("Phone number >>> ")
     for temp_user in user_list:
-        if temp_user.get("phone") == entry_phone:
+        if temp_user.getter_phone() == entry_phone:
             the_user = temp_user
             break
 
@@ -74,14 +74,14 @@ def user_checker():
         # Clear screen
         clear_screen()
 
-        print(f'Hello {the_user.get("name")}')
+        print(f'Hello {the_user.getter_name()}')
         print("Please enter your password to login :)")
 
         entry_password = input("Password >>> ")
-        while entry_password != the_user.get("password"):
+        while entry_password != the_user.getter_password():
             clear_screen()
 
-            print(f'Dear {the_user.get("name")},\nyou entered the wrong password.')
+            print(f'Dear {the_user.getter_name()},\nyou entered the wrong password.')
             print("Please enter the correct password to login :)")
             entry_password = input("Password >>> ")
 
@@ -129,16 +129,22 @@ def main_function_show_the_book_details():
             print(f'🗿 Author : {founded_book.getter_author()}')
             print(f'📄 Pages : {founded_book.getter_pages()}')
             print(f'💸 Price : {founded_book.getter_price()}')
-            print(f'🤑 Discount Price : {founded_book.getter_discount_price() if founded_book.getter_discount_price() != 0.0 else "---"}')
+            print(
+                f'🤑 Discount Price : {founded_book.getter_discount_price() if founded_book.getter_discount_price() != 0.0 else "---"}')
             print(f'📅 Published date : {founded_book.getter_published_date()}')
 
             print("\n")
 
-            print(f"{founded_book.getter_title()} is a compelling work by the talented author {founded_book.getter_author()}, published in {founded_book.getter_published_date()}.")
-            print(f"This book spans {founded_book.getter_pages()} pages filled with rich content that invites readers into a thoughtful and immersive journey through the author's world.")
-            print(f"Priced at {founded_book.getter_price() if founded_book.getter_discount_price() == 0 else founded_book.getter_discount_price()} USD, this book reflects the value of its content and the quality of its production.")
-            print(f"With artistic design, high-end printing, and carefully selected materials,"+" it stands as a distinguished cultural product.")
-            print(f"More than just a literary work, {founded_book.getter_title()} offers a reflective and aesthetic experience—one that encourages deeper understanding, contemplation, and a fresh perspective on the world around us.")
+            print(
+                f"{founded_book.getter_title()} is a compelling work by the talented author {founded_book.getter_author()}, published in {founded_book.getter_published_date()}.")
+            print(
+                f"This book spans {founded_book.getter_pages()} pages filled with rich content that invites readers into a thoughtful and immersive journey through the author's world.")
+            print(
+                f"Priced at {founded_book.getter_price() if founded_book.getter_discount_price() == 0 else founded_book.getter_discount_price()} USD, this book reflects the value of its content and the quality of its production.")
+            print(
+                f"With artistic design, high-end printing, and carefully selected materials," + " it stands as a distinguished cultural product.")
+            print(
+                f"More than just a literary work, {founded_book.getter_title()} offers a reflective and aesthetic experience—one that encourages deeper understanding, contemplation, and a fresh perspective on the world around us.")
 
         # The book not exists in our database
         else:
@@ -152,12 +158,61 @@ def main_function_show_the_book_details():
         print("Try again :)")
 
 
+def main_function_deposit():
+    print("Deposit on your account !🤑")
+    print(f"Dear {user.getter_name()} ! 👋")
+    print(f'Your balance : {user.getter_balance()}')
+    print("Please enter an amount to deposit on your account.")
+    try:
+        amount = float(input("Enter amount to deposit : "))
+        if amount <= 0:
+            clear_screen()
+            print("Are you kidding me?! 😐😂")
+            print("Negative Deposit ?! 😐😂")
+            print("Please enter a positive amount !")
+            print("Try again :)")
+            return None
+        else:
+            with open(USER_JSON_FILE_PATH, 'r') as file:
+                data = json.load(file)
+
+                # Finding the index of saved user
+                user_index = data.index(user.dictionary_info())
+
+                # Deleting the user form database
+                data.remove(user.dictionary_info())
+
+                # Updating user
+                user.setter_balance(amount)
+
+                # Insert the updated user to user list
+                data.insert(user_index, user.dictionary_info())
+
+            # Adding to database
+            with open(USER_JSON_FILE_PATH, 'w') as file:
+                json.dump(data, file)
+
+            # Showing the suitable message
+            clear_screen()
+            print("Deposit Successfully done!")
+            print("Enjoy your new Balance 😉")
+            print(f"Your balance : {user.getter_balance()}")
+
+    except ValueError:
+        clear_screen()
+        print("Invalid input ! 😐")
+        print("Please enter a integer input to deposit on your account.😊")
+        print("Try again :)")
+
+    # print(user.getter_balance())
+
 ####################################################################### Main Part ######################################
 
 clear_screen()
 
 # Loading files
 load_books_from_database()
+load_users_from_database()
 
 print("""Hello dear user!
 Welcome to Computech Book Store !
@@ -172,6 +227,8 @@ while user is None:
     user = user_checker()
 
 # Now we can continue with the detected user
+# Clear the user list Because we have the user!
+user_list.clear()
 
 # Defining the Menu
 menu = '''Choose one of the following options : 
@@ -205,7 +262,7 @@ while True:
     elif choice == "5":
         pass
     elif choice == "6":
-        pass
+        main_function_deposit()
     elif choice == "7":
         pass
     elif choice == "8":
