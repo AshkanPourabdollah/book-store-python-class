@@ -1,5 +1,6 @@
 from classes.book import Book
 from classes.user import User
+from classes.cart import Cart
 import os
 import json
 
@@ -37,6 +38,7 @@ def load_books_from_database():
             )
 
 
+# Load users
 def load_users_from_database():
     with open(USER_JSON_FILE_PATH, 'r') as file:
         data = json.load(file)
@@ -51,6 +53,31 @@ def load_users_from_database():
                 )
             )
 
+
+def load_cart_from_database():
+    with open(CART_JSON_FILE_PATH, 'r') as file:
+        data = json.load(file)
+        for cart in data:
+            if user.getter_phone() == cart.get("user").get("phone"):
+                # Creating the book
+                book = Book(
+                    uid=cart.get("book").get("uid"),
+                    title=cart.get("book").get("title"),
+                    author=cart.get("book").get("author"),
+                    pages=cart.get("book").get("pages"),
+                    price=cart.get("book").get("price"),
+                    discount_price=cart.get("book").get("discount_price"),
+                    category=cart.get("book").get("category"),
+                    published_date=cart.get("book").get("published_date"),
+                )
+                # Creating cart object
+                the_cart = Cart(
+                    uid=cart.get("uid"),
+                    book=book,
+                    user=user
+                )
+                # Adding to cart list
+                cart_list.append(the_cart)
 
 ####################################################################### Functions ######################################
 def clear_screen():
@@ -206,6 +233,29 @@ def main_function_deposit():
 
     # print(user.getter_balance())
 
+
+def main_function_show_the_cart():
+    print("Showing the Cart list")
+    # If there is no item in your cart
+    if len(cart_list) == 0:
+        print("Your cart is empty 🤔")
+        print("Please add some book to your cart!")
+        print("And try again 😁")
+        return None
+
+    # If cart list is not empty
+    print("Count \t\t Book price \t\t Book title")
+    print("-----------------------------------------------------")
+    total_price = 0
+    for item in cart_list:
+        book = item.getter_book()
+        price = book.getter_price() if book.getter_discount_price() == 0 else book.getter_discount_price()
+        total_price += price
+        print(f"4 \t\t {price}$ \t\t\t {book.getter_title()}")
+
+    # Showing the total price
+    print("-----------------------------------------------------")
+    print(f"Total price is {total_price} $ 💵💸")
 ####################################################################### Main Part ######################################
 
 clear_screen()
@@ -227,6 +277,9 @@ while user is None:
     user = user_checker()
 
 # Now we can continue with the detected user
+# Loading cart file with the user
+load_cart_from_database()
+
 # Clear the user list Because we have the user!
 user_list.clear()
 
@@ -246,6 +299,7 @@ while True:
     # To clear screen
     clear_screen()
 
+    # Getting option from user
     choice = input(menu)
 
     # Clear menu screen
@@ -256,7 +310,7 @@ while True:
     elif choice == "2":
         main_function_show_the_book_details()
     elif choice == "3":
-        pass
+        main_function_show_the_cart()
     elif choice == "4":
         pass
     elif choice == "5":
