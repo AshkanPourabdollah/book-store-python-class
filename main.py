@@ -79,6 +79,7 @@ def load_cart_from_database():
                 # Adding to cart list
                 cart_list.append(the_cart)
 
+
 ####################################################################### Functions ######################################
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -115,10 +116,41 @@ def user_checker():
         return the_user
 
 
+def finding_book_by_id(id):
+    for book in book_list:
+        if book.show_info_by_id(id) is not None:
+            return book
+
+
 def waiting_function():
     print()
     print()
     input("Please press 'enter' to continue ...")
+
+
+def show_book_cart_list_with_count(book_list_with_count):
+    print("Count \t\t Book price \t\t Book title")
+    print("-----------------------------------------------------")
+    total_price = 0
+    books_id = []
+    uniq_books_id = set(books_id)
+    for item in book_list_with_count:
+        book = item.getter_book()
+        uniq_books_id.add(book.getter_uid())
+        books_id.append(book.getter_uid())
+
+    for uniq_id in uniq_books_id:
+        book = finding_book_by_id(uniq_id)
+        price = book.getter_price() if book.getter_discount_price() == 0 else book.getter_discount_price()
+        count = books_id.count(uniq_id)
+        total_price += (price * count)
+        # Showing info
+        print(f"{count} \t\t {price}$ \t\t\t {book.getter_title()}")
+
+    # Showing the total price
+    print("-----------------------------------------------------")
+    return total_price
+
 
 
 def main_function_show_all_the_books():
@@ -244,18 +276,10 @@ def main_function_show_the_cart():
         return None
 
     # If cart list is not empty
-    print("Count \t\t Book price \t\t Book title")
-    print("-----------------------------------------------------")
-    total_price = 0
-    for item in cart_list:
-        book = item.getter_book()
-        price = book.getter_price() if book.getter_discount_price() == 0 else book.getter_discount_price()
-        total_price += price
-        print(f"4 \t\t {price}$ \t\t\t {book.getter_title()}")
-
-    # Showing the total price
-    print("-----------------------------------------------------")
+    # Using the function to show the cart items and get the total price
+    total_price = show_book_cart_list_with_count(cart_list)
     print(f"Total price is {total_price} $ 💵💸")
+
 ####################################################################### Main Part ######################################
 
 clear_screen()

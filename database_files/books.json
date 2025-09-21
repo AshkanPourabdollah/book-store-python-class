@@ -45,7 +45,7 @@
         "author": "Robert Brown",
         "pages": 500,
         "price": 60.0,
-        "discount_price": 0.0,
+        "discount_price": 50.0,
         "category": "Machine Learning",
         "published_date": "2019-11-10"
     },
