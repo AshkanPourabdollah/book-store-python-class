@@ -39,14 +39,12 @@ project/
 ## ⚙️ How to Run
 1. Make sure you have **Python 3** installed on your system.  
 2. Clone the repository:
-   ```bash
-   git clone https://github.com/username/computech-book-store.git
+   git clone https://github.com/AshkanPourabdollah/book-store-python-class.git
    cd computech-book-store
-   ```
+   
 3. Run the program:
-   ```bash
    python main.py
-   ```
+   
 
 ---
 
