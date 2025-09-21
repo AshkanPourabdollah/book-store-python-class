@@ -36,24 +36,6 @@
     }
   },
   {
-    "uid": 9,
-    "book": {
-      "uid": 5,
-      "title": "Machine Learning 101",
-      "author": "Robert Brown",
-      "pages": 500,
-      "price": 60.0,
-      "discount_price": 50.0,
-      "category": "Machine Learning",
-      "published_date": "2019-11-10"
-    },
-    "user": {
-      "name": "Mina",
-      "age": 22,
-      "phone": "09123456704"
-    }
-  },
-  {
     "uid": 21,
     "book": {
       "uid": 5,
@@ -105,24 +87,6 @@
       "name": "Hossein",
       "age": 35,
       "phone": "09123456705"
-    }
-  },
-  {
-    "uid": 14,
-    "book": {
-      "uid": 1,
-      "title": "Python Basics",
-      "author": "John Smith",
-      "pages": 250,
-      "price": 30.0,
-      "discount_price": 25.0,
-      "category": "Programming",
-      "published_date": "2015-03-12"
-    },
-    "user": {
-      "name": "Mina",
-      "age": 22,
-      "phone": "09123456704"
     }
   },
   {

@@ -152,7 +152,6 @@ def show_book_cart_list_with_count(book_list_with_count):
     return total_price
 
 
-
 def main_function_show_all_the_books():
     # Showing table
     print("##################################################################################################")
@@ -280,6 +279,63 @@ def main_function_show_the_cart():
     total_price = show_book_cart_list_with_count(cart_list)
     print(f"Total price is {total_price} $ 💵💸")
 
+
+def main_function_remove_item_from_cart():
+    print("Removing an item from your cart")
+    # If there is no item in your cart
+    if len(cart_list) == 0:
+        print("Your cart is empty 🤔")
+        print("So what do you want to remove !🤔")
+        print("Please add some book to your cart!")
+        print("And try again 😁")
+        return None
+
+    # We have some products in our cart
+    show_book_cart_list_with_count(cart_list)
+
+    # Finding the uniq books in cart
+    uniq_books_id = set()
+    for book in cart_list:
+        uniq_books_id.add(book.getter_book().getter_uid())
+
+    print("Which books do you want to remove?🤔")
+    counter = 1
+    for id in uniq_books_id:
+        print(f'{counter}) {finding_book_by_id(id)}')
+        counter += 1
+
+    try:
+        choose = int(input("-->"))
+        uniq_books_id = list(uniq_books_id)
+        if not (1 <= choose <= len(uniq_books_id)):
+            clear_screen()
+            print("Please enter a book that is exists")
+            return None
+
+        # Deleting form memory database
+        print(uniq_books_id[choose-1])
+
+        for item in cart_list:
+            if item.getter_book().getter_uid() == uniq_books_id[choose-1]:
+                cart_list.remove(item)
+                # Deleting from json database
+                with open(CART_JSON_FILE_PATH, 'r') as file:
+                    data = json.load(file)
+                    data.remove(item.dictionary_info())
+                with open(CART_JSON_FILE_PATH, 'w') as file:
+                    json.dump(data, file)
+                break
+
+        # Showing the successful message
+        clear_screen()
+        print("The book has successfully deleted from your cart")
+        print("To see the updated cart, choose option 3")
+        print("Lets continue 😉")
+
+    except ValueError:
+        clear_screen()
+        print("Please enter a valid input")
+
 ####################################################################### Main Part ######################################
 
 clear_screen()
@@ -336,7 +392,7 @@ while True:
     elif choice == "3":
         main_function_show_the_cart()
     elif choice == "4":
-        pass
+        main_function_remove_item_from_cart()
     elif choice == "5":
         pass
     elif choice == "6":
