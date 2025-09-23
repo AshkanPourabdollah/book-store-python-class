@@ -336,6 +336,11 @@ def main_function_remove_item_from_cart():
         clear_screen()
         print("Please enter a valid input")
 
+
+def main_function_add_item_to_cart():
+    print("Adding item to cart")
+
+
 ####################################################################### Main Part ######################################
 
 clear_screen()
@@ -394,7 +399,7 @@ while True:
     elif choice == "4":
         main_function_remove_item_from_cart()
     elif choice == "5":
-        pass
+        main_function_add_item_to_cart()
     elif choice == "6":
         main_function_deposit()
     elif choice == "7":
