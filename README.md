@@ -68,6 +68,7 @@ Once logged in, you’ll see the following menu:
 - Built-in Python libraries:  
   - `os`  
   - `json`
+  - `uuid`
 
 ---
 

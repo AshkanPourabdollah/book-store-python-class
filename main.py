@@ -395,6 +395,76 @@ def main_function_add_item_to_cart():
         print("Please enter a valid input")
         print("And try again😃")
         return None
+
+
+def main_function_to_pay():
+    print('Payment Part')
+    print(f'Dear {user.getter_name()}')
+    print(f'Your balance is {user.getter_balance()} $ 💸')
+    print()
+
+    if len(cart_list) == 0:
+        print("Your cart list is empty 🗿")
+        print("Please select option 5 to add some book to your cart 🛒")
+        print("Then try again 😉")
+        return None
+
+    print('You have this books in your cart')
+    total_price = show_book_cart_list_with_count(cart_list)
+    print(f'Total price : {total_price} $')
+
+    # For checking user balance
+    if user.getter_balance() < total_price:
+        clear_screen()
+        print("You don't have enough money! 🗿🔪")
+        print("Charge your account 💸")
+        print("Then try again 😁")
+        return None
+
+    print('\nDo you want to pay? [y/n]')
+    choose = input("-->")
+    if choose.lower().strip() == 'y':
+        # Reduce user balance
+        old_user = user
+        print(type(old_user))
+        user.setter_balance(-total_price)
+        # Update user from database
+        with open(USER_JSON_FILE_PATH, 'r') as file:
+            data = json.load(file)
+        with open(USER_JSON_FILE_PATH, 'w') as file:
+            # Delete old user
+            #data.remove(old_user.dictionary_info())
+            # Insert new user
+            #data.append(user.dictionary_info())
+            # Adding to database
+            #json.dump(data, file)
+        print(data)
+
+        # Loading file from json and delete them
+        with open(CART_JSON_FILE_PATH, 'r') as file:
+            data = json.load(file)
+        with open(CART_JSON_FILE_PATH, 'w') as file:
+            for cart in cart_list:
+                data.remove(cart.dictionary_info())
+            json.dump(data, file)
+
+        # Clear cart list
+        cart_list.clear()
+
+        # Showing the suitable message
+        print("Your cart has been paid!")
+
+    elif choose.lower().strip() == 'n':
+        # Returning True because we don't want to show "Press any key to continue"
+        return True
+    else:
+        clear_screen()
+        print("Invalid input 🗿")
+        print("Please enter a valid input [y/n]")
+        print("Try again 😉")
+        return None
+
+
 ####################################################################### Main Part ######################################
 
 clear_screen()
@@ -457,7 +527,8 @@ while True:
     elif choice == "6":
         main_function_deposit()
     elif choice == "7":
-        pass
+        if main_function_to_pay():
+            continue
     elif choice == "8":
         # Showing the suitable message
         print("Thank you for using Computech Book Store!")
