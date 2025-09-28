@@ -3,6 +3,8 @@ from classes.user import User
 from classes.cart import Cart
 import os
 import json
+import uuid
+
 
 user_list = []
 
@@ -120,7 +122,7 @@ def finding_book_by_id(id):
     for book in book_list:
         if book.show_info_by_id(id) is not None:
             return book
-
+    return None
 
 def waiting_function():
     print()
@@ -338,9 +340,61 @@ def main_function_remove_item_from_cart():
 
 
 def main_function_add_item_to_cart():
-    print("Adding item to cart")
+    print("✅Adding item to cart")
 
+    print("Book id \t Book price \t Book title")
+    print("------------------------------------------------------------------------")
+    # Showing the book list
+    for book in book_list:
+        price = book.getter_price() if book.getter_discount_price() == 0 else book.getter_discount_price()
+        print(f'{book.getter_uid()} \t\t {price} $ \t\t {book.getter_title()}')
 
+    print("------------------------------------------------------------------------")
+
+    print("Which book do you want to add?")
+    try:
+        choose = int(input("ID -->"))
+        the_book = finding_book_by_id(choose)
+
+        # Checking that the book exists or not
+        if the_book:
+            # Adding book to cart list
+
+            # Creating unique id
+            uniq_id = str(uuid.uuid4())
+            cart = Cart(
+                uid=uniq_id,
+                book=the_book,
+                user=user,
+            )
+            # Adding to cart list
+            cart_list.append(cart)
+
+            # Adding to database
+            with open(CART_JSON_FILE_PATH, 'r') as file:
+                data = json.load(file)
+            with open(CART_JSON_FILE_PATH, 'w') as file:
+                data.append(cart.dictionary_info())
+                json.dump(data, file)
+
+            # Showing the message
+            clear_screen()
+            print("✅ All done ! 😏")
+            print(f"{the_book.getter_title()} successfully added to your cart 🎉")
+            print("To check the cart, select the option 3 ⏪")
+        else:
+            clear_screen()
+            print("❌ There is no book exists with that id 🗿")
+            print("Please enter an id that exists")
+            print("Then try again 😉")
+            return None
+    except ValueError:
+        clear_screen()
+        print("❌ We want you to enter a number")
+        print("But you entered another type!🗿")
+        print("Please enter a valid input")
+        print("And try again😃")
+        return None
 ####################################################################### Main Part ######################################
 
 clear_screen()
