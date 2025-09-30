@@ -5,7 +5,6 @@ import os
 import json
 import uuid
 
-
 user_list = []
 
 book_list = []
@@ -123,6 +122,7 @@ def finding_book_by_id(id):
         if book.show_info_by_id(id) is not None:
             return book
     return None
+
 
 def waiting_function():
     print()
@@ -315,10 +315,10 @@ def main_function_remove_item_from_cart():
             return None
 
         # Deleting form memory database
-        print(uniq_books_id[choose-1])
+        print(uniq_books_id[choose - 1])
 
         for item in cart_list:
-            if item.getter_book().getter_uid() == uniq_books_id[choose-1]:
+            if item.getter_book().getter_uid() == uniq_books_id[choose - 1]:
                 cart_list.remove(item)
                 # Deleting from json database
                 with open(CART_JSON_FILE_PATH, 'r') as file:
@@ -424,21 +424,21 @@ def main_function_to_pay():
     print('\nDo you want to pay? [y/n]')
     choose = input("-->")
     if choose.lower().strip() == 'y':
-        # Reduce user balance
-        old_user = user
-        print(type(old_user))
-        user.setter_balance(-total_price)
+
         # Update user from database
         with open(USER_JSON_FILE_PATH, 'r') as file:
             data = json.load(file)
         with open(USER_JSON_FILE_PATH, 'w') as file:
+            # Getting user index
+            user_index = data.index(user.dictionary_info())
             # Delete old user
-            #data.remove(old_user.dictionary_info())
+            data.remove(user.dictionary_info())
+            # Reduce user balance
+            user.setter_balance(-total_price)
             # Insert new user
-            #data.append(user.dictionary_info())
+            data.insert(user_index, user.dictionary_info())
             # Adding to database
-            #json.dump(data, file)
-        print(data)
+            json.dump(data, file)
 
         # Loading file from json and delete them
         with open(CART_JSON_FILE_PATH, 'r') as file:
@@ -452,7 +452,10 @@ def main_function_to_pay():
         cart_list.clear()
 
         # Showing the suitable message
-        print("Your cart has been paid!")
+        clear_screen()
+        print("Your cart has been paid! 😉")
+        print("Now you can enjoy your books")
+        print("If you have more money and you want to spend them💸,\nBack to menu😁")
 
     elif choose.lower().strip() == 'n':
         # Returning True because we don't want to show "Press any key to continue"
